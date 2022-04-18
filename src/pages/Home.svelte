@@ -1,19 +1,35 @@
 <script>
 	import CharityList from "../components/CharityList.svelte";
-	import Header from '../components/Header.svelte';
-	import Welcome from '../components/Welcome.svelte';
-	import Promo from '../components/Promo.svelte';
-	import Footer from '../components/Footer.svelte';
+	import Header from "../components/Header.svelte";
+	import Welcome from "../components/Welcome.svelte";
+	import Promo from "../components/Promo.svelte";
+	import Footer from "../components/Footer.svelte";
+	import Loader from "../components/Loader.svelte";
 	
-	import { charities } from "../data/charities.js";
-	
-	let title = "Charity";
-</script>
+	 let title = "Charity";
+	let data = getData();
 
+	async function getData() {
+		const res = await fetch(`https://charity-apl-bwa.herokuapp.com/charities/${id}`)
+	    const data = await  res.json();
+
+	   if(res.ok) {
+		 return data; 
+	   } else {
+		   throw new Error(data);
+	   }
+	}
+	
+
+</script>
 
 <Header />
 <Welcome />
-	<CharityList {charities} />
-	<Promo />
-	<Footer />
+{#await data}
+<Loader />
+{:then charities}
+<CharityList {charities} />
+{/await}
+<Promo />
+<Footer />
 	
